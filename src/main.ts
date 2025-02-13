@@ -10,8 +10,10 @@ import { Game, Types } from "phaser";
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
     type: Phaser.AUTO,
-    width: 1024,
-    height: 768,
+    width: 800,
+    height: 600,
+    parent: 'game-container',
+    backgroundColor: '#028af8',
     physics: {
         default: 'arcade',
         arcade: {
@@ -19,8 +21,6 @@ const config: Types.Core.GameConfig = {
             debug: false
         }
     },
-    parent: 'game-container',
-    backgroundColor: '#028af8',
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH
