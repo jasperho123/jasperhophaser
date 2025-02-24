@@ -6,6 +6,7 @@ export class Game extends Scene {
     cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     stars: any;
     bombs: any;
+    gameOver: any;
 
     constructor() {
         super('Game');
@@ -84,30 +85,48 @@ export class Game extends Scene {
             score += 10;
             scoreText.setText('Score: ' + score);
 
-           
-        }
+            if (star.countActive(true) === 0)
+                {
+                    star.children.iterate(function (child: any) {
+            
+                        child.enableBody(true, child.x, 0, true, true);
+            
+                    });
+            
+                    var x = (_player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            
+                    var bomb: any = bomb.create(x, 16, 'bomb');
+                    bomb.setBounce(1);
+                    bomb.setCollideWorldBounds(true);
+                    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                }
+            }
+
+            var score = 0;
+            var scoreText: any;
+            scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px',});
+    
+            this.bombs = this.physics.add.group();
+    
+            this.physics.add.collider(this.bombs, this.platforms);
+
+            this.physics.add.collider(
+                this.player,
+                this.bombs,
+                (player: any, _bomb: any) =>
+                {
+                    this.physics.pause();
+                
+                    player.setTint(0xff0000);
+                
+                    player.anims.play('turn');
+                
+                    this.gameOver = true;
+                },
+                undefined,
+                this);
+
         
-
-        var score = 0;
-        var scoreText: any;
-        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px',});
-
-        this.bombs = this.physics.add.group();
-
-        this.physics.add.collider(this.bombs, this.platforms);
-
-        this.physics.add.collider(this.player, this.bombs, hitBomb, undefined, this);
-
-        function hitBomb (player: any, _bomb: any,)
-        {
-            this.physics.pause();
-        
-            player.setTint(0xff0000);
-        
-            player.anims.play('turn');
-        
-            this.gameOver = true;
-        }
     }
 
     update() {
